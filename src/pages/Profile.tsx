@@ -40,6 +40,8 @@ export default function Profile() {
   const userServices = services?.filter(service => userProviders.some(provider => provider.id === service.provider_id)) || []
   const userAds = ads?.filter(ad => userProviders.some(provider => provider.id === ad.provider_id)) || []
 
+  return (
+    <div>
       <div className="profile-header">
         <h1>الملف الشخصي</h1>
       </div>
