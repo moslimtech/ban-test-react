@@ -268,18 +268,22 @@ export default function Home() {
   }, [])
 
   // UI helpers
-  const renderAdsCard = (ad: Ad) => (
-    <div key={ad.id} style={styles.adCard}>
-      <img
-        src={ad.ads_images?.[0]?.image_url || adFallbackImage}
-        alt={ad.title}
-        style={styles.adImage}
-        onError={(e) => { e.currentTarget.src = adFallbackImage }}
-      />
-      <h3>{ad.title}</h3>
-      {ad.description && <p>{ad.description}</p>}
-    </div>
-  )
+  const renderAdsCard = (ad: Ad) => {
+    const fallbackTitle = ad.title || 'عرض مميز'
+    const fallbackDescription = ad.description || 'اكتشف عرضنا الرائع هنا! تواصل معنا للحصول على التفاصيل الكاملة.'
+    return (
+      <div key={ad.id} style={styles.adCard}>
+        <img
+          src={ad.ads_images?.[0]?.image_url || adFallbackImage}
+          alt={fallbackTitle}
+          style={styles.adImage}
+          onError={(e) => { e.currentTarget.src = adFallbackImage }}
+        />
+        <h3>{fallbackTitle}</h3>
+        <p>{fallbackDescription}</p>
+      </div>
+    )
+  }
 
   const renderContent = () => {
     if (loading) return <div style={styles.loading}>جارٍ التحميل...</div>
@@ -327,7 +331,7 @@ export default function Home() {
             {/* Featured Places */}
             <section className="container" style={{ marginBottom: '2rem' }}>
               <div style={styles.sectionHeader}>
-                <h2>الأماكن المميزة</h2>
+                <h2 style={{ color: 'black', margin: 0, fontSize: '1.8rem', fontWeight: 'bold', textShadow: '1px 1px 2px rgba(0,0,0,0.3)' }}>الأماكن المميزة</h2>
                 <Link to="/places" style={styles.viewAllLink}>عرض الكل</Link>
               </div>
               <div className="grid cards">
@@ -338,7 +342,7 @@ export default function Home() {
             {/* Featured Services */}
             <section className="container" style={{ marginBottom: '2rem' }}>
               <div style={styles.sectionHeader}>
-                <h2>ال��دمات المميزة</h2>
+                <h2>الخدمات المميزة</h2>
                 <Link to="/services" style={styles.viewAllLink}>عرض الكل</Link>
               </div>
               <div className="grid cards">
@@ -349,7 +353,7 @@ export default function Home() {
             {/* Ads */}
             <section className="container" style={{ marginBottom: '2rem' }}>
               <div style={styles.sectionHeader}>
-                <h2>الإعلانات</h2>
+                <h2 style={{ color: 'black', margin: 0 }}>الإعلانات</h2>
                 <Link to="/ads" style={styles.viewAllLink}>عرض الكل</Link>
               </div>
               <div className="grid cards">
@@ -368,14 +372,19 @@ export default function Home() {
 
   return (
     <div className="container">
-      <div style={{ textAlign: 'center', marginTop: '0.5rem', marginBottom: '0.5rem', color: '#333' }}>
-        <small>زيارات الجلسة: {sessionVisitsCount}</small>
+      <div style={{ textAlign: 'center', marginTop: '0.5rem', marginBottom: '0.5rem' }}>
+        <div style={styles.sessionBubble}>
+          <small style={{ color: '#f5f7ff', margin: 0 }}>زيارات الجلسة: {sessionVisitsCount}</small>
+        </div>
       </div>
 
       {/* Hero */}
       <div style={styles.hero}>
         <h1 style={styles.heroTitle}>اكتشف الأماكن والخدمات في مدينتك</h1>
         <p style={styles.heroSubtitle}>منصة شاملة للأعمال والخدمات المحلية</p>
+        <div style={styles.ctaBubble}>
+          <p style={{ color: '#f5f7ff', margin: '0.5rem 1rem', fontSize: '1.1rem', fontWeight: 'bold' }}>ابدأ الاستكشاف الآن واكتشف أفضل العروض!</p>
+        </div>
         <div style={{ marginTop: '1rem', display: 'flex', gap: '1rem', justifyContent: 'center', alignItems: 'center' }}>
           <button 
             onClick={handleManualRefresh} 
@@ -440,23 +449,31 @@ const styles = {
     alignItems: 'center',
     height: '200px',
     fontSize: '1.2rem',
+    color: '#f5f7ff',
   },
   hero: {
     textAlign: 'center' as const,
     padding: '3rem 1rem',
     background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
     color: 'white',
-    borderRadius: '10px',
+    borderRadius: '12px',
     marginBottom: '2rem',
+    boxShadow: '0 10px 30px rgba(0,0,0,0.25)',
   },
   heroTitle: {
-    fontSize: '2.5rem',
+    fontSize: 'clamp(2.5rem, 6vw, 3rem)',
     marginBottom: '1rem',
     fontWeight: 'bold',
+    color: 'white',
+    textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+    lineHeight: 1.2,
   },
   heroSubtitle: {
-    fontSize: '1.2rem',
-    opacity: 0.9,
+    fontSize: 'clamp(1.2rem, 4vw, 1.5rem)',
+    opacity: 1,
+    color: 'white',
+    textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
+    lineHeight: 1.4,
   },
   tabs: {
     display: 'flex',
@@ -467,17 +484,18 @@ const styles = {
   },
   tab: {
     padding: '0.5rem 1rem',
-    border: '2px solid #007bff',
-    background: 'white',
-    color: '#007bff',
+    border: '2px solid #5b7cfa',
+    background: 'rgba(255,255,255,0.05)',
+    color: 'black',
     borderRadius: '25px',
     cursor: 'pointer',
     transition: 'all 0.3s ease',
     fontWeight: 'bold',
   },
   activeTab: {
-    background: '#007bff',
+    background: '#5b7cfa',
     color: 'white',
+    borderColor: '#3d63f7',
   },
   section: {
     marginBottom: '3rem',
@@ -487,27 +505,35 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: '1rem',
+    padding: '0.5rem 0',
+    borderBottom: '2px solid rgba(91,124,250,0.3)',
   },
   viewAllLink: {
-    color: '#007bff',
+    color: '#5b7cfa',
     textDecoration: 'none',
     fontWeight: 'bold',
+    fontSize: '1.1rem',
+    transition: 'color 0.3s ease',
+    textShadow: '1px 1px 2px rgba(0,0,0,0.3)',
   },
   adCard: {
-    background: '#fff',
-    borderRadius: '8px',
-    boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
-    padding: '1rem',
+    background: 'linear-gradient(180deg, #121933, #1b2445)',
+    border: '1px solid rgba(255,255,255,0.08)',
+    borderRadius: '12px',
+    padding: '1.5rem',
     textAlign: 'center' as const,
-    transition: 'transform 0.2s',
+    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+    boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
+    marginBottom: '1rem',
   },
   adImage: {
     width: '100%',
-    height: '150px',
+    height: '180px',
     objectFit: 'cover' as const,
-    borderRadius: '5px',
+    borderRadius: '10px',
     marginBottom: '1rem',
-    backgroundColor: '#f3f4f6',
+    backgroundColor: '#1b2445',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
   },
   errorContainer: {
     display: 'flex',
@@ -515,16 +541,34 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     padding: '2rem',
+    color: '#f5f7ff',
   },
   retryButton: {
     padding: '0.75rem 1.5rem',
-    background: '#007bff',
+    background: '#5b7cfa',
     color: 'white',
     border: 'none',
-    borderRadius: '5px',
+    borderRadius: '8px',
     cursor: 'pointer',
     fontSize: '1rem',
     fontWeight: 'bold',
     transition: 'background 0.3s',
+  },
+  sessionBubble: {
+    background: 'linear-gradient(180deg, #121933, #1b2445)',
+    border: '1px solid rgba(255,255,255,0.1)',
+    borderRadius: '20px',
+    padding: '0.25rem 0.75rem',
+    display: 'inline-block',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+  },
+  ctaBubble: {
+    background: 'linear-gradient(180deg, #121933, #1b2445)',
+    border: '1px solid rgba(255,255,255,0.1)',
+    borderRadius: '20px',
+    margin: '1rem auto',
+    maxWidth: '80%',
+    boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+    textAlign: 'center' as const,
   },
 } as const

@@ -40,111 +40,119 @@ export default function Profile() {
   const userServices = services?.filter(service => userProviders.some(provider => provider.id === service.provider_id)) || []
   const userAds = ads?.filter(ad => userProviders.some(provider => provider.id === ad.provider_id)) || []
 
-  return (
-    <div style={styles.container}>
-      <h1>الملف الشخصي</h1>
-      <div style={styles.userInfo}>
+      <div className="profile-header">
+        <h1>الملف الشخصي</h1>
+      </div>
+      <div className="profile-user-info">
         <p><strong>الاسم:</strong> {user.full_name}</p>
         <p><strong>البريد الإلكتروني:</strong> {user.email}</p>
-        <button onClick={signOut} style={styles.signOutButton}>تسجيل الخروج</button>
+        <button onClick={signOut} className="profile-sign-out-btn">تسجيل الخروج</button>
       </div>
 
       {/* تبويب الباقات والخطط */}
-      <div className="card" style={{ marginBottom: 20 }}>
+      <div className="profile-section">
         <h2>الباقات والخطط</h2>
-        {pkgLoading ? <p>جارٍ التحميل...</p> : pkgInfo && pkgInfo.is_active ? (
-          <>
-            <p><strong>باقتك الحالية:</strong> {pkgInfo.package_name || 'مجانية' }</p>
-            <p><strong>تاريخ بدء الاشتراك:</strong> {pkgInfo.started_at ? new Date(pkgInfo.started_at).toLocaleDateString() : 'غير محدد'}</p>
-            <p><strong>تاريخ الانتهاء:</strong> {pkgInfo.expires_at ? new Date(pkgInfo.expires_at).toLocaleDateString() : 'غير محدد'}</p>
-            <button className="btn" onClick={()=>navigate('/packages')}>ترقية أو تغيير الباقة</button>
-          </>
-        ) : (
-          <>
-            <p>أنت على الباقة المجانية (Free tier).</p>
-            <button className="btn primary" onClick={()=>navigate('/packages')}>اشترك في باقة أفضل</button>
-          </>
-        )}
+        <div className="card">
+          {pkgLoading ? <p>جارٍ التحميل...</p> : pkgInfo && pkgInfo.is_active ? (
+            <>
+              <p><strong>باقتك الحالية:</strong> {pkgInfo.package_name || 'مجانية' }</p>
+              <p><strong>تاريخ بدء الاشتراك:</strong> {pkgInfo.started_at ? new Date(pkgInfo.started_at).toLocaleDateString() : 'غير محدد'}</p>
+              <p><strong>تاريخ الانتهاء:</strong> {pkgInfo.expires_at ? new Date(pkgInfo.expires_at).toLocaleDateString() : 'غير محدد'}</p>
+              <button className="profile-btn profile-btn-primary" onClick={()=>navigate('/packages')}>ترقية أو تغيير الباقة</button>
+            </>
+          ) : (
+            <>
+              <p>أنت على الباقة المجانية (Free tier).</p>
+              <button className="profile-btn profile-btn-primary" onClick={()=>navigate('/packages')}>اشترك في باقة أفضل</button>
+            </>
+          )}
+        </div>
       </div>
 
-      <h2>أماكني ({userProviders.length})</h2>
-      {providersLoading && <p>جارٍ التحميل...</p>}
-      {providersError && <p style={styles.error}>{providersError}</p>}
-      <div style={styles.grid}>
-        {userProviders.map(provider => (
-          <button key={provider.id} style={styles.cardButton} onClick={() => setSelectedProvider(provider)}>
-            {provider.image_url && (
-              <img
-                src={provider.image_url}
-                alt={provider.name}
-                style={styles.avatar}
-                decoding="async"
-                referrerPolicy="no-referrer"
-                onError={(e) => {
-                  const t = e.currentTarget as HTMLImageElement
-                  t.onerror = null
-                  t.src = 'https://placehold.co/200x200?text=No+Image'
-                }}
-              />
-            )}
-            <h3 style={{ marginTop: '0.5rem' }}>{provider.name}</h3>
-            <p><strong>الفئة:</strong> {provider.category}</p>
-            <p><strong>المدينة:</strong> {provider.city}</p>
-          </button>
-        ))}
+      <div className="profile-section">
+        <h2>أماكني ({userProviders.length})</h2>
+        {providersLoading && <p>جارٍ التحميل...</p>}
+        {providersError && <p className="error">{providersError}</p>}
+        <div className="grid">
+          {userProviders.map(provider => (
+            <button key={provider.id} className="profile-card-button" onClick={() => setSelectedProvider(provider)}>
+              {provider.image_url && (
+                <img
+                  src={provider.image_url}
+                  alt={provider.name}
+                  className="profile-avatar"
+                  decoding="async"
+                  referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    const t = e.currentTarget as HTMLImageElement
+                    t.onerror = null
+                    t.src = 'https://placehold.co/200x200?text=No+Image'
+                  }}
+                />
+              )}
+              <h3>{provider.name}</h3>
+              <p><strong>الفئة:</strong> {provider.category}</p>
+              <p><strong>المدينة:</strong> {provider.city}</p>
+            </button>
+          ))}
+        </div>
       </div>
 
-      <h2>خدماتي ({userServices.length})</h2>
-      {servicesLoading && <p>جارٍ التحميل...</p>}
-      {servicesError && <p style={styles.error}>{servicesError}</p>}
-      <div style={styles.grid}>
-        {userServices.map(service => (
-          <button key={service.id} style={styles.cardButton} onClick={() => setSelectedService(service)}>
-            {service.image_url && (
-              <img
-                src={service.image_url}
-                alt={service.name}
-                style={styles.avatar}
-                decoding="async"
-                referrerPolicy="no-referrer"
-                onError={(e) => {
-                  const t = e.currentTarget as HTMLImageElement
-                  t.onerror = null
-                  t.src = 'https://placehold.co/200x200?text=No+Image'
-                }}
-              />
-            )}
-            <h3 style={{ marginTop: '0.5rem' }}>{service.name}</h3>
-            <p style={{ minHeight: 40 }}>{service.description}</p>
-            {typeof service.price === 'number' && <p><strong>السعر:</strong> {service.price} جنيه</p>}
-          </button>
-        ))}
+      <div className="profile-section">
+        <h2>خدماتي ({userServices.length})</h2>
+        {servicesLoading && <p>جارٍ التحميل...</p>}
+        {servicesError && <p className="error">{servicesError}</p>}
+        <div className="grid">
+          {userServices.map(service => (
+            <button key={service.id} className="profile-card-button" onClick={() => setSelectedService(service)}>
+              {service.image_url && (
+                <img
+                  src={service.image_url}
+                  alt={service.name}
+                  className="profile-avatar"
+                  decoding="async"
+                  referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    const t = e.currentTarget as HTMLImageElement
+                    t.onerror = null
+                    t.src = 'https://placehold.co/200x200?text=No+Image'
+                  }}
+                />
+              )}
+              <h3>{service.name}</h3>
+              <p style={{ minHeight: 40 }}>{service.description}</p>
+              {typeof service.price === 'number' && <p><strong>السعر:</strong> {service.price} جنيه</p>}
+            </button>
+          ))}
+        </div>
       </div>
 
-      <h2>إعلاناتي ({userAds.length})</h2>
-      {adsLoading && <p>جارٍ التحميل...</p>}
-      {adsError && <p style={styles.error}>{adsError}</p>}
-      <div style={styles.grid}>
-        {userAds.map(ad => (
-          <div key={ad.id} style={styles.card}>
-            <h3>{ad.title}</h3>
-            <p>{ad.description}</p>
-            <p><strong>الحالة:</strong> {ad.status}</p>
-          </div>
-        ))}
+      <div className="profile-section">
+        <h2>إعلاناتي ({userAds.length})</h2>
+        {adsLoading && <p>جارٍ التحميل...</p>}
+        {adsError && <p className="error">{adsError}</p>}
+        <div className="grid">
+          {userAds.map(ad => (
+            <div key={ad.id} className="card">
+              <h3>{ad.title}</h3>
+              <p>{ad.description}</p>
+              <p><strong>الحالة:</strong> {ad.status}</p>
+            </div>
+          ))}
+        </div>
       </div>
       {/* Provider Modal */}
       {selectedProvider && (
-        <div className="modal-overlay" onClick={() => !actionLoading && setSelectedProvider(null)}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <h3 style={{ marginTop: 0 }}>{selectedProvider.name}</h3>
+        <div className="profile-modal-overlay" onClick={() => !actionLoading && setSelectedProvider(null)}>
+          <div className="profile-modal" onClick={(e) => e.stopPropagation()}>
+            <h3>{selectedProvider.name}</h3>
             {selectedProvider.image_url && (
-              <img src={selectedProvider.image_url} alt={selectedProvider.name} style={styles.modalImage} onError={(e) => { const t = e.currentTarget as HTMLImageElement; t.onerror = null; t.src = 'https://placehold.co/400x300?text=No+Image' }} />
+              <img src={selectedProvider.image_url} alt={selectedProvider.name} className="profile-modal-image" onError={(e) => { const t = e.currentTarget as HTMLImageElement; t.onerror = null; t.src = 'https://placehold.co/400x300?text=No+Image' }} />
             )}
             {selectedProvider.description && <p>{selectedProvider.description}</p>}
-            <div className="actions">
-              <button onClick={() => navigate(`/place/${selectedProvider.id}`)} disabled={actionLoading} className="btn">فتح التفاصيل</button>
-              <button onClick={() => navigate(`/edit-place/${selectedProvider.id}`)} disabled={actionLoading} className="btn primary">تعديل المكان</button>
+            <div className="profile-actions">
+              <button onClick={() => navigate(`/place/${selectedProvider.id}`)} disabled={actionLoading} className="profile-btn profile-btn-secondary">فتح التفاصيل</button>
+              <button onClick={() => navigate(`/edit-place/${selectedProvider.id}`)} disabled={actionLoading} className="profile-btn profile-btn-primary">تعديل المكان</button>
               <button
                 onClick={async () => {
                   if (!confirm('هل أنت متأكد من حذف هذا المكان؟ سيؤدي ذلك إلى إزالته من القوائم.')) return
@@ -162,11 +170,11 @@ export default function Profile() {
                   }
                 }}
                 disabled={actionLoading}
-                className="btn danger"
+                className="profile-btn profile-btn-danger"
               >
                 حذف المكان
               </button>
-              <button onClick={() => setSelectedProvider(null)} disabled={actionLoading} className="btn">إغلاق</button>
+              <button onClick={() => setSelectedProvider(null)} disabled={actionLoading} className="profile-btn profile-btn-secondary">إغلاق</button>
             </div>
           </div>
         </div>
@@ -174,11 +182,11 @@ export default function Profile() {
 
       {/* Service Modal */}
       {selectedService && (
-        <div className="modal-overlay" onClick={() => !actionLoading && setSelectedService(null)}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <h3 style={{ marginTop: 0 }}>{selectedService.name}</h3>
+        <div className="profile-modal-overlay" onClick={() => !actionLoading && setSelectedService(null)}>
+          <div className="profile-modal" onClick={(e) => e.stopPropagation()}>
+            <h3>{selectedService.name}</h3>
             {(serviceForm?.image_url || selectedService.image_url) && (
-              <img src={serviceForm?.image_url || selectedService.image_url!} alt={selectedService.name} style={styles.modalImage} onError={(e) => { const t = e.currentTarget as HTMLImageElement; t.onerror = null; t.src = 'https://placehold.co/400x300?text=No+Image' }} />
+              <img src={serviceForm?.image_url || selectedService.image_url!} alt={selectedService.name} className="profile-modal-image" onError={(e) => { const t = e.currentTarget as HTMLImageElement; t.onerror = null; t.src = 'https://placehold.co/400x300?text=No+Image' }} />
             )}
             <div style={{ display: 'grid', gap: '0.5rem', marginTop: '0.5rem' }}>
               <label>
@@ -192,7 +200,6 @@ export default function Profile() {
                     price: prev?.price ?? (typeof selectedService.price === 'number' ? String(selectedService.price) : ''),
                     image_url: prev?.image_url ?? (selectedService.image_url || '')
                   }))}
-                  style={{ width: '100%' }}
                 />
               </label>
               <label>
@@ -206,7 +213,6 @@ export default function Profile() {
                     price: prev?.price ?? (typeof selectedService.price === 'number' ? String(selectedService.price) : ''),
                     image_url: prev?.image_url ?? (selectedService.image_url || '')
                   }))}
-                  style={{ width: '100%' }}
                 />
               </label>
               <label>
@@ -221,7 +227,6 @@ export default function Profile() {
                     price: e.target.value,
                     image_url: prev?.image_url ?? (selectedService.image_url || '')
                   }))}
-                  style={{ width: '100%' }}
                 />
               </label>
               <div>
@@ -237,8 +242,8 @@ export default function Profile() {
                 />
               </div>
             </div>
-            <div className="actions">
-              <button onClick={() => navigate(`/service/${selectedService.id}`)} disabled={actionLoading} className="btn">فتح التفاصيل</button>
+            <div className="profile-actions">
+              <button onClick={() => navigate(`/service/${selectedService.id}`)} disabled={actionLoading} className="profile-btn profile-btn-secondary">فتح التفاصيل</button>
               <button
                 onClick={async () => {
                   try {
@@ -262,7 +267,7 @@ export default function Profile() {
                   }
                 }}
                 disabled={actionLoading}
-                className="btn primary"
+                className="profile-btn profile-btn-primary"
               >
                 حفظ التعديلات
               </button>
@@ -283,11 +288,11 @@ export default function Profile() {
                   }
                 }}
                 disabled={actionLoading}
-                className="btn danger"
+                className="profile-btn profile-btn-danger"
               >
                 حذف الخدمة
               </button>
-              <button onClick={() => { setSelectedService(null); setServiceForm(null) }} disabled={actionLoading} className="btn">إغلاق</button>
+              <button onClick={() => { setSelectedService(null); setServiceForm(null) }} disabled={actionLoading} className="profile-btn profile-btn-secondary">إغلاق</button>
             </div>
           </div>
         </div>
@@ -297,82 +302,4 @@ export default function Profile() {
   )
 }
 
-const styles = {
-  container: {
-    maxWidth: '1200px',
-    margin: '0 auto',
-    padding: '2rem',
-    fontFamily: 'Arial, sans-serif',
-  },
-  userInfo: {
-    background: '#f8f9fa',
-    padding: '1.5rem',
-    borderRadius: '8px',
-    marginBottom: '2rem',
-  },
-  signOutButton: {
-    background: '#dc3545',
-    color: 'white',
-    border: 'none',
-    padding: '0.5rem 1rem',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    marginTop: '1rem',
-  },
-  grid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-    gap: '1rem',
-    marginBottom: '2rem',
-  },
-  cardButton: {
-    background: 'white',
-    border: '1px solid #ddd',
-    borderRadius: '8px',
-    padding: '1rem',
-    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-    textAlign: 'center' as const,
-    cursor: 'pointer',
-  },
-  avatar: {
-    width: 90,
-    height: 90,
-    objectFit: 'cover' as const,
-    borderRadius: '50%',
-    display: 'block',
-    margin: '0 auto',
-    background: '#f2f2f2',
-  },
-  error: {
-    color: '#dc3545',
-    background: '#f8d7da',
-    padding: '0.5rem',
-    borderRadius: '4px',
-    marginBottom: '1rem',
-  },
-  modalOverlay: {
-    position: 'fixed' as const,
-    inset: 0,
-    background: 'rgba(0,0,0,0.5)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 1000,
-    padding: '1rem',
-  },
-  modal: {
-    background: '#fff',
-    borderRadius: 8,
-    padding: '1rem',
-    width: '100%',
-    maxWidth: 520,
-    boxShadow: '0 10px 30px rgba(0,0,0,0.2)'
-  },
-  modalImage: {
-    width: '100%',
-    height: 240,
-    objectFit: 'cover' as const,
-    borderRadius: 8,
-    background: '#f2f2f2',
-  },
-}
+

@@ -22,6 +22,7 @@ import UserProfile from '../pages/admin/UserProfile'
 import DatabaseChecker from '../pages/admin/DatabaseChecker'
 import AdminSubscriptions from '../pages/admin/AdminSubscriptions'
 import AdminPaymentSettings from '../pages/admin/AdminPaymentSettings'
+import Footer from '../components/Footer'
 
 export default function AppRoutes() {
   return (
@@ -60,9 +61,10 @@ function Layout() {
   return (
     <div>
       <Navbar />
-      <div style={{ paddingTop: 8 }}>
+      <div style={{ paddingTop: 8, paddingBottom: 60 }}>
         <Outlet />
       </div>
+      <Footer />
     </div>
   )
 }

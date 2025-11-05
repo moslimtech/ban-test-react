@@ -46,7 +46,7 @@ export default function Navbar() {
   return (
     <nav style={styles.nav} className="navbar">
       <div style={styles.navInner}>
-        <Link to="/" style={{ ...styles.brand, color: '#ffffff' }}>BanReact</Link>
+        <Link to="/" style={{ ...styles.brand, color: '#ffffff' }}>بان للاعلانات</Link>
         <input type="checkbox" id="nav-toggle" style={{ display: 'none' }} />
         <label htmlFor="nav-toggle" style={styles.burger}>
           ☰

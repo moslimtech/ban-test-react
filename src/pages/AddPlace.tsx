@@ -139,7 +139,8 @@ export default function AddPlace() {
         p_area: null,
         p_user_id: user.id,
         p_activity_id: formData.activity_id ? parseInt(formData.activity_id) : null,
-        p_package_id: null
+        p_package_id: null,
+        p_online: !hasPhysicalLocation
       })
 
       if (rpcError) {

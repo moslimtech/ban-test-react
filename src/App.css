@@ -127,6 +127,25 @@ a { color: inherit; }
 @media (max-width: 640px) {
   #root { padding: 16px; }
   .grid.cards { grid-template-columns: 1fr; }
+  .btn { padding: 8px 12px; font-size: 0.9rem; }
+  .card { padding: 12px; }
+  .modal { padding: 12px; max-width: 90%; }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  #root { padding: clamp(16px, 2vw, 24px); }
+  .grid.cards { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+  .btn { padding: 10px 14px; }
+  .card { padding: 16px; }
+  .modal { max-width: 480px; }
+}
+
+@media (min-width: 1025px) {
+  #root { padding: clamp(16px, 3vw, 32px); }
+  .grid.cards { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+  .btn { padding: 10px 14px; }
+  .card { padding: 16px; }
+  .modal { max-width: 560px; }
 }
 
 /* Navbar links */
